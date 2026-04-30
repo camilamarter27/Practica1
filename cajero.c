@@ -43,23 +43,79 @@ int login(struct Usuario registro[], int total) {
     return -1; // si no encuentra usuario registrado
 }
 
+// Funcion menu
+// Permite usar el cajero con el usuario que inició sesión
+void menu(struct Usuario *u) {
+
+    int opcion;
+    float monto;
+
+    do {
+        printf("\n--- MENU ---\n");
+        printf("1. Consultar saldo\n");
+        printf("2. Depositar\n");
+        printf("3. Retirar\n");
+        printf("4. Salir\n");
+        printf("Opcion: ");
+        scanf("%d", &opcion);
 
 
-int main (){
+       //Seleccion de opciones del menu
+               switch(opcion) {
+            
+            //Mostrar saldo en pantalla
+            case 1:
+                printf("Saldo: %.2f\n", u->saldo);
+                break;
 
- int total = 3; // cantidad de usuarios
-    int index;     // guardar la posicion del usuario
 
-    index = login(registro, total); // llama a la funcion login
+            //Deposito
+            case 2:
+                printf("Monto a depositar: ");
+                scanf("%f", &monto);
+                u->saldo += monto;
+                printf("Deposito realizado");
+                break;
 
-    // Verifica si el login fue correcto
+            //Retiro
+            case 3:
+                printf("Monto a retirar: ");
+                scanf("%f", &monto);
+
+                if(monto <= u->saldo) {
+                    u->saldo -= monto;
+                    printf("Retiro realizado");
+                } else {
+                    printf("Fondos insuficientes");
+                }
+                break;
+            //Cerrar sesion/abandonar sistema  
+            case 4:
+                printf("Abandonando sistema...");
+                break;
+
+            //Error o invalidacion en caso de repuesta no seleccionable
+            default:
+                printf("Opcion invalida\n");
+        }
+
+    } while(opcion != 4);
+}
+
+int main () {
+
+    int total = 3;
+    int index;
+
+    index = login(registro, total);
+
     if(index == -1) {
         printf("Acceso denegado\n");
-        
     } else {
         printf("Bienvenido %s\n", registro[index].nombre);
-    }   
+
+        menu(&registro[index]); // se llama el menu con el usuario
+    }
 
     return 0;
-
 }
